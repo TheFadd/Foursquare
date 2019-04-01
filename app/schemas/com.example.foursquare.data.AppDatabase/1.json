@@ -1,0 +1,87 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "e249bfd12cea9433cbd755d18986d109",
+    "entities": [
+      {
+        "tableName": "venueList",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `code` TEXT, `venueName` TEXT, `venueShortName` TEXT, `venueAdress` TEXT, `venuePrefix` TEXT, `venueSyfix` TEXT, `venueDistance` INTEGER NOT NULL, `venueLatitude` REAL NOT NULL, `venueLongtitude` REAL NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "venueName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shortName",
+            "columnName": "venueShortName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "adress",
+            "columnName": "venueAdress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "prefix",
+            "columnName": "venuePrefix",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syfix",
+            "columnName": "venueSyfix",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distance",
+            "columnName": "venueDistance",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "venueLatitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longtitude",
+            "columnName": "venueLongtitude",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e249bfd12cea9433cbd755d18986d109\")"
+    ]
+  }
+}
