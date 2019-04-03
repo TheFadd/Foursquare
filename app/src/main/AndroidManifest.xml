@@ -37,14 +37,14 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.MapsActivity"
+            android:name=".ui.mapsactivity.MapsActivity"
 
             android:screenOrientation="portrait">
             </activity>
-        <activity android:name=".view.DetailActivity"
+        <activity android:name=".ui.detailadapterview.DetailActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".view.MainActivity"
+        <activity android:name=".ui.mainactivity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
