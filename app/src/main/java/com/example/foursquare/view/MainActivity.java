@@ -1,10 +1,14 @@
 package com.example.foursquare.view;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,10 +22,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 
 import com.example.foursquare.R;
 import com.example.foursquare.VenueItemToDataBase;
@@ -45,7 +50,6 @@ import retrofit2.Response;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private VenueListAPI.ApiInterface api;
@@ -56,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Boolean locationPermissionsGranted = false;
     private String latitute;
-    private String longtitude ;
+    private String longtitude;
     private LinearLayout emptyView;
     private LinearLayout noConnectionView;
     private LinearLayout badQueryView;
     private ProgressBar progressBar;
-
+    private LinearLayout noLocationView;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -71,42 +75,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        emptyView = findViewById(R.id.empty_view);
-        noConnectionView = findViewById(R.id.no_connection_view);
-        badQueryView = findViewById(R.id.bad_query);
-        progressBar = findViewById(R.id.load_indicator);
-
-        recListVenueView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
-        onEmptyView();
-        recListVenueView.setHasFixedSize(true);
-        ll = new LinearLayoutManager(this);
-        recListVenueView.setLayoutManager(ll);
+        initParams();
         getLocationPermission();
-
-        Context context = MainActivity.this;
-
-
-
-//        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-//
-//        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-//            buildAlertMessageNoGps();
-//        }
+        checkLocation();
     }
-//    private void buildAlertMessageNoGps() {
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-//                .setCancelable(false)
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-//                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-//                    }
-//                });
-//        final AlertDialog alert = builder.create();
-//        getDeviceLocation();
-//        alert.show();
-//    }
 
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        getDeviceLocation();
+        alert.show();
+    }
 
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
@@ -121,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
+                            if (currentLocation != null) {
                                 latitute = Double.toString(currentLocation.getLatitude());
                                 longtitude = Double.toString(currentLocation.getLongitude());
+                            }
 
                         } else {
-                           // Log.d(TAG, "onComplete: current location is null");
-                          //  buildAlertMessageNoGps();
                             Toast.makeText(MainActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -152,32 +138,29 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
-
             }
         } else {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
-
     }
 
-    public void startApp(String quary) {
+    private void startApp(String quary) {
+
         api = VenueListAPI.getClientVenueList().create(VenueListAPI.ApiInterface.class);
         String client_id = VenueListAPI.CLIENT_ID;
         String client_secret = VenueListAPI.CLIENT_SECRET;
         String version = VenueListAPI.VERSION;
         String coordinates = latitute + "," + longtitude;
-        String qua = quary;
-        onLoading();
 
         Call<ResponseFromListVenue> callVenueList = api.getVenueList(client_id, client_secret, version, coordinates, quary);
-
         callVenueList.enqueue(new Callback<ResponseFromListVenue>() {
             @Override
             public void onResponse(@NonNull Call<ResponseFromListVenue> call, @NonNull Response<ResponseFromListVenue> response) {
                 Log.e(TAG, "РЕСПОНС ОКК");
                 List<VenueItemToDataBase> listOfVenues = new ArrayList<>();
+
                 for (Item item : response.body().getResponse().getGroups().get(0).getItems()) {
                     listOfVenues.add(VenueItemToDataBase.from(item));
                 }
@@ -189,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
                     onView();
                 }
 
-
                 List<VenueItemToDataBase> venueList = new ArrayList<>();
                 int size = response.body().getResponse().getGroups().get(0).getItems().size();
                 if (size != 0) {
@@ -198,29 +180,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else onBadView();
                 progressBar.setVisibility(GONE);
-
-//                if(response.body().getResponse().equals(null)){
-//                    onBadView();
-//                    progressBar.setVisibility(GONE);
-//
-//                }
-//                venueDAO.clearVenues();
-//                venueDAO.insert(venueList);
             }
 
             @Override
             public void onFailure(Call<ResponseFromListVenue> call, Throwable t) {
                 Log.e(TAG, "onFailure");
-
-                // InternetConnection.checkConnection(MainActivity.this);
                 if (InternetConnection.isConnected(MainActivity.this)) {
                     onBadView();
                 }
                 onNoConnectionView();
-
                 progressBar.setVisibility(GONE);
-
-
             }
         });
     }
@@ -232,13 +201,13 @@ public class MainActivity extends AppCompatActivity {
         MenuItem search = menu.findItem(R.id.item_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         search(searchView);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.item_search) {
             return true;
         }
@@ -250,14 +219,29 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                query = searchView.getQuery().toString();
-                startApp(query);
+                locationPermissionsGranted = true;
+//                getDeviceLocation();
+                getDeviceLocation();
+                if (latitute == null || longtitude == null) {
+                    onNoLocationView();
+                } else {
+                    onLoading();
+                    query = searchView.getQuery().toString();
+                    startApp(query);
+                    InputMethodManager imm = (InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    View view = MainActivity.this.getCurrentFocus();
+                    if (view == null) {
+                        view = new View(MainActivity.this);
+                    }
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+
+                return true;
             }
         });
     }
@@ -282,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
         emptyView.setVisibility(GONE);
         noConnectionView.setVisibility(VISIBLE);
         badQueryView.setVisibility(GONE);
-        recListVenueView.setVisibility(GONE)
-        ;
+        recListVenueView.setVisibility(GONE);
+        noLocationView.setVisibility(GONE);
     }
 
 
@@ -293,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         noConnectionView.setVisibility(GONE);
         badQueryView.setVisibility(GONE);
         progressBar.setVisibility(GONE);
+        noLocationView.setVisibility(GONE);
     }
 
     public void onView() {
@@ -301,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
         noConnectionView.setVisibility(GONE);
         badQueryView.setVisibility(GONE);
         progressBar.setVisibility(GONE);
+        noLocationView.setVisibility(GONE);
     }
 
     public void onBadView() {
@@ -309,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
         noConnectionView.setVisibility(GONE);
         progressBar.setVisibility(GONE);
         badQueryView.setVisibility(VISIBLE);
+        noLocationView.setVisibility(GONE);
     }
 
     public void onLoading() {
@@ -317,7 +304,37 @@ public class MainActivity extends AppCompatActivity {
         noConnectionView.setVisibility(GONE);
         badQueryView.setVisibility(GONE);
         progressBar.setVisibility(VISIBLE);
+        noLocationView.setVisibility(GONE);
     }
 
+    public void onNoLocationView() {
+        emptyView.setVisibility(GONE);
+        recListVenueView.setVisibility(GONE);
+        noConnectionView.setVisibility(GONE);
+        badQueryView.setVisibility(GONE);
+        progressBar.setVisibility(GONE);
+        noLocationView.setVisibility(VISIBLE);
+    }
+
+    public void initParams() {
+        emptyView = findViewById(R.id.empty_view);
+        noConnectionView = findViewById(R.id.no_connection_view);
+        badQueryView = findViewById(R.id.bad_query);
+        progressBar = findViewById(R.id.load_indicator);
+        noLocationView = findViewById(R.id.location_view);
+
+        recListVenueView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
+        onEmptyView();
+        recListVenueView.setHasFixedSize(true);
+        ll = new LinearLayoutManager(this);
+        recListVenueView.setLayoutManager(ll);
+    }
+
+    public void checkLocation() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+    }
 }
 

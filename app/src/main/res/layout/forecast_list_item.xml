@@ -9,15 +9,13 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginTop="8dp"
-    app:layout_goneMarginBottom="8dp"
-    >
-
+    app:layout_goneMarginBottom="8dp">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/CardViewHuman"
+        android:id="@+id/CardViewVenue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="#03A9F4"
+        app:cardBackgroundColor="@color/colorPrimary"
         tools:layout_editor_absoluteX="30dp"
         tools:layout_editor_absoluteY="0dp">
 
@@ -72,7 +70,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/short_name"
                 tools:text="500 km" />
 
-
             <android.support.constraint.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="wrap_content"
@@ -81,8 +78,6 @@
                 app:layout_constraintGuide_begin="42dp" />
         </android.support.constraint.ConstraintLayout>
 
-
     </android.support.v7.widget.CardView>
-
 
 </android.support.constraint.ConstraintLayout>

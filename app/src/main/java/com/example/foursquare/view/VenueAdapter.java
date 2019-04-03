@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.foursquare.R;
 import com.example.foursquare.VenueItemToDataBase;
+import com.example.foursquare.adapterUtils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VenueAdapter  extends RecyclerView.Adapter<VenueAdapter.VenueViewHolder>{
+public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.VenueViewHolder> {
 
 
     public interface VenueListener {
@@ -29,7 +30,7 @@ public class VenueAdapter  extends RecyclerView.Adapter<VenueAdapter.VenueViewHo
     private Context context;
     private VenueListener listener;
 
-    public VenueAdapter( List<VenueItemToDataBase> venues,Context ctext,VenueListener listener) {
+    public VenueAdapter(List<VenueItemToDataBase> venues, Context ctext, VenueListener listener) {
         items = venues;
         context = ctext;
         this.listener = listener;
@@ -45,29 +46,14 @@ public class VenueAdapter  extends RecyclerView.Adapter<VenueAdapter.VenueViewHo
     public void onBindViewHolder(final VenueViewHolder holder, final int position) {
         final VenueItemToDataBase item = items.get(position);
 
-          String name = item.getName();
-          int dis = item.getDistance();
-          String distance;
-          if(dis<1000){
-              distance = "0."+dis+" km, ";
-          }
-          else distance = Integer.toString(item.getDistance()).substring(0, 1)+"." +
-                Integer.toString(item.getDistance()).substring(1)+" km, ";
-
-         distance = distance + item.getAdress();
-
-
-          String shortName = item.getShortName();
-          String icon  = item.getPrefix() +"bg_64"+
-                         item.getSyfix();
-
-          holder.nameOfVenueView.setText(name);
-          holder.distanceView.setText(distance);
-          holder.shortNameView.setText(shortName);
-         // holder.adressView.setText(adress);
-
+        String name = item.getName();
+        String distance = Helper.getAdressWithDistance(item);
+        String shortName = item.getShortName();
+        String icon = item.getPrefix() + "bg_64" + item.getSyfix();
+        holder.nameOfVenueView.setText(name);
+        holder.distanceView.setText(distance);
+        holder.shortNameView.setText(shortName);
         Picasso.with(context).load(icon).into(holder.imageView);
-
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,23 +61,9 @@ public class VenueAdapter  extends RecyclerView.Adapter<VenueAdapter.VenueViewHo
                 notifyDataSetChanged();
             }
         });
-
-//        holder.maxTempView.setText(Integer.toString(tMax)+"°");
-//        holder.minTempView.setText(Integer.toString(tMin)+"°");
-//        holder.descriptionView.setText(item.getDescription());
-//        holder.dayOfWeekView.setText(dayOfWeek + dom +" " + dayOfMonth);
-//        Picasso.with(context).load(item.getIcon()).into(holder.imageView);
-//
-//        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                listener.onWeatherDay(item);
-//                notifyDataSetChanged();
-//            }
-//        });
     }
 
-    public void swapData(List<VenueItemToDataBase> data){
+    public void swapData(List<VenueItemToDataBase> data) {
         items = data;
         notifyDataSetChanged();
     }
@@ -123,6 +95,4 @@ public class VenueAdapter  extends RecyclerView.Adapter<VenueAdapter.VenueViewHo
             ButterKnife.bind(this, viewItem);
         }
     }
-
-
 }

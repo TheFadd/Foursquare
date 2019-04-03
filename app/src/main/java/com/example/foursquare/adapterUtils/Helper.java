@@ -2,7 +2,10 @@ package com.example.foursquare.adapterUtils;
 
 import com.example.foursquare.R;
 import com.example.foursquare.VenueItemToDataBase;
+import com.example.foursquare.networking.venueitem.jsononeitem.BestPhoto;
 import com.example.foursquare.networking.venueitem.jsononeitem.ItemTips;
+import com.example.foursquare.networking.venueitem.jsononeitem.Price;
+import com.example.foursquare.networking.venueitem.jsononeitem.ResponseItem;
 
 import java.util.Calendar;
 
@@ -92,48 +95,82 @@ public class Helper {
         return newLikes;
     }
 
-    public static int getRaitingColor(double color){
+    public static int getRaitingColor(double color) {
 
         int colorId = 0;
 
-        if(Double.valueOf(color)>=0.0&&Double.valueOf(color)<2.0 ){
+        if (Double.valueOf(color) >= 0.0 && Double.valueOf(color) < 2.0) {
             // raitingTextView.setBackgroundResource(R.color.raiting2);
             colorId = R.color.raiting2;
         }
-        if(Double.valueOf(color)>=2.0&&Double.valueOf(color)<4.0 ){
+        if (Double.valueOf(color) >= 2.0 && Double.valueOf(color) < 4.0) {
             //raitingTextView.setBackgroundResource(R.color.raiting4);
             colorId = R.color.raiting4;
         }
-        if(Double.valueOf(color)>=4.0&&Double.valueOf(color)<6.0 ){
+        if (Double.valueOf(color) >= 4.0 && Double.valueOf(color) < 6.0) {
             colorId = R.color.raiting6;
             //raitingTextView.setBackgroundResource(R.color.raiting6);
         }
-        if(Double.valueOf(color)>=6.0&&Double.valueOf(color)<8.0 ){
+        if (Double.valueOf(color) >= 6.0 && Double.valueOf(color) < 8.0) {
             colorId = R.color.raiting8;
             // raitingTextView.setBackgroundResource(R.color.raiting8);
         }
-        if(Double.valueOf(color)>=8.0&&Double.valueOf(color)<9.0 ){
+        if (Double.valueOf(color) >= 8.0 && Double.valueOf(color) < 9.0) {
             colorId = R.color.raiting9;
             //  raitingTextView.setBackgroundResource(R.color.raiting9);
         }
-        if(Double.valueOf(color)>=9.0){
+        if (Double.valueOf(color) >= 9.0) {
             colorId = R.color.raiting10;
             //  raitingTextView.setBackgroundResource(R.color.raiting10);
         }
         return colorId;
     }
 
-    public static String getAdressWithDistance(VenueItemToDataBase venueItemToDataBase){
-        int dis = venueItemToDataBase.getDistance();
-        String distance;
-        if(dis<1000){
-            distance = "0."+dis+" km, ";
+    public static String getAdressWithDistance(VenueItemToDataBase venueItemToDataBase) {
+        double dis = venueItemToDataBase.getDistance();
+        int di = venueItemToDataBase.getDistance();
+        String adress = venueItemToDataBase.getAdress();
+        String km = " km, ";
+        if (adress == "null" || adress == null) {
+            adress = "";
+            km = " km";
         }
-        else distance = Integer.toString(venueItemToDataBase.getDistance()).substring(0, 1)+"." +
-                Integer.toString(venueItemToDataBase.getDistance()).substring(1)+" km, ";
-        distance = distance + venueItemToDataBase.getAdress();
+
+        String distance = "";
+        if (dis < 1000) {
+            distance = "0." + Integer.valueOf(di) + km;
+        }
+        if (dis >= 1000) {
+            distance = dis / 1000 + km;
+        }
+        distance = distance + adress;
 
         return distance;
+    }
+
+    public static ResponseItem checkItem(ResponseItem item) {
+        ResponseItem newItem = item;
+
+        if (item.getVenueItem().getRating() == null) {
+            newItem.getVenueItem().setRating(-1.0);
+        }
+        if (item.getVenueItem().getPrice() == null) {
+            Price price = new Price("");
+            newItem.getVenueItem().setPrice(price);
+        }
+        if (item.getVenueItem().getBestPhoto() == null) {
+            item.getVenueItem().setBestPhoto(new BestPhoto("", "", "", "", ""));
+        }
+
+        for(int i = 0; i < item.getVenueItem().getTips().getGroups().get(0).getItemTips().size() ; i++) {
+            if (item.getVenueItem().getTips().getGroups().get(0).getItemTips().get(i).getUser().getLastName() == null) {
+                item.getVenueItem().getTips().getGroups().get(0).getItemTips().get(i).getUser().setLastName("");
+            }
+            if(item.getVenueItem().getTips().getGroups().get(0).getItemTips().get(i).getUser().getFirstName() == null){
+                item.getVenueItem().getTips().getGroups().get(0).getItemTips().get(i).getUser().setFirstName("");
+            }
+        }
+        return newItem;
     }
 
 }

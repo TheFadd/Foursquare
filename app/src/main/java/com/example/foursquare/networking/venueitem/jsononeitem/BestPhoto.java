@@ -16,17 +16,17 @@ public class BestPhoto {
     private String suffix;
     @SerializedName("width")
     @Expose
-    private Integer width;
+    private String width;
 
     @SerializedName("height")
     @Expose
-    private Integer height;
+    private String height;
 
-    public Integer getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
@@ -54,15 +54,15 @@ public class BestPhoto {
         this.suffix = suffix;
     }
 
-    public Integer getWidth() {
+    public String getWidth() {
         return width;
     }
 
-    public void setWidth(Integer width) {
+    public void setWidth(String width) {
         this.width = width;
     }
 
-    public BestPhoto(String id, String prefix, String suffix, Integer width, Integer height) {
+    public BestPhoto(String id, String prefix, String suffix, String width, String height) {
         this.id = id;
         this.prefix = prefix;
         this.suffix = suffix;

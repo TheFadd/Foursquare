@@ -2,7 +2,7 @@ package com.example.foursquare.detailAdapterView;
 
 import com.example.foursquare.networking.venueitem.jsononeitem.ItemTips;
 
-public class Tiper extends  RecycleViewItem {
+public class Tiper extends RecycleViewItem {
 
     private ItemTips itemTips;
 

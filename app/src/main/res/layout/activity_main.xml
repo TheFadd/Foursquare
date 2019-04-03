@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_forecast"
         android:layout_width="match_parent"
@@ -41,7 +39,6 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
-
     <include
         android:id="@+id/no_connection_view"
         layout="@layout/no_connection"
@@ -53,7 +50,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recyclerview_forecast" />
 
-    w
+    <include
+        android:id="@+id/location_view"
+        layout="@layout/location_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recyclerview_forecast" />
 
     <ProgressBar
         android:id="@+id/load_indicator"
@@ -71,8 +77,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent
-" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

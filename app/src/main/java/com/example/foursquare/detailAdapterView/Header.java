@@ -2,7 +2,7 @@ package com.example.foursquare.detailAdapterView;
 
 import com.example.foursquare.DetailInformation;
 
-public class Header extends  RecycleViewItem {
+public class Header extends RecycleViewItem {
 
     private DetailInformation detailInformation;
 

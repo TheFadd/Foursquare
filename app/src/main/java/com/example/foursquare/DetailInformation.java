@@ -10,18 +10,18 @@ import java.util.List;
 
 public class DetailInformation {
 
-    String id;
-    String venueName;
-    String raiting;
-    String shortName;
-    String price;
-    String discriptions;
-    String adressWithDistanse;
-    String icon;
-    String bestPhoto;
-    String latitude;
-    String longtitude;
-    List<ItemTips> tips;
+    private String id;
+    private String venueName;
+    private String raiting;
+    private String shortName;
+    private String price;
+    private String discriptions;
+    private String adressWithDistanse;
+    private String icon;
+    private String bestPhoto;
+    private String latitude;
+    private String longtitude;
+    private List<ItemTips> tips;
 
     public List<ItemTips> getTips() {
         return tips;
@@ -139,9 +139,9 @@ public class DetailInformation {
         return new DetailInformation(
                 list.get(0),
                 list.get(1),
-                item.getVenueItem().getRating().toString(),
+                item.getVenueItem().getRating().toString()+"",
                 list.get(2),
-                item.getVenueItem().getPrice().getCurrency(),
+                item.getVenueItem().getPrice().getCurrency()+"",
                 discription,
                 list.get(3),
                 list.get(4)+"bg_64"+list.get(5),

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -56,17 +57,39 @@ public class DetailAdapter extends RecyclerView.Adapter {
             HeaderHolder headerHolder = (HeaderHolder) holder;
             Header header = (Header) recyclerViewItem;
             headerHolder.tipName.setText("Tips");
-            int colorId= Helper.getRaitingColor(Double.valueOf(header.getDetailInformation().getRaiting()));
-            headerHolder.nameOfVenueTextView.setText(header.getDetailInformation().getVenueName());
-            headerHolder.adressTextView.setText(header.getDetailInformation().getAdressWithDistanse());
-            headerHolder.discriptionOneTextView.setText(header.getDetailInformation().getDiscriptions());
-            headerHolder.priceTextView.setText(header.getDetailInformation().getPrice());
-            headerHolder.raitingTextView.setText(header.getDetailInformation().getRaiting());
+
+            int colorId = Helper.getRaitingColor(Double.valueOf(header.getDetailInformation().getRaiting()));
             headerHolder.raitingTextView.setBackgroundResource(colorId);
-            headerHolder.shortNameTextView.setText(header.getDetailInformation().getShortName());
-            Glide.with(context).load(header.getDetailInformation().getBestPhoto()).into(headerHolder.imageViewTwo);
+            if (!header.getDetailInformation().getVenueName().isEmpty()) {
+                headerHolder.nameOfVenueTextView.setText(header.getDetailInformation().getVenueName());
+            }
+            if (!header.getDetailInformation().getAdressWithDistanse().isEmpty()) {
+                headerHolder.adressTextView.setText(header.getDetailInformation().getAdressWithDistanse());
+            }
+            if (!header.getDetailInformation().getDiscriptions().isEmpty()) {
+                headerHolder.discriptionOneTextView.setText(header.getDetailInformation().getDiscriptions());
+            }
+            if (!header.getDetailInformation().getPrice().isEmpty()) {
+                headerHolder.priceTextView.setText(header.getDetailInformation().getPrice());
+            }
+            if (!header.getDetailInformation().getRaiting().isEmpty()) {
+                if (Double.valueOf(header.getDetailInformation().getRaiting()) < 0.0) {
+                    header.getDetailInformation().setRaiting("");
+                } else
+                    headerHolder.raitingTextView.setText(header.getDetailInformation().getRaiting());
+
+            }
+            if (!header.getDetailInformation().getShortName().isEmpty()) {
+                headerHolder.shortNameTextView.setText(header.getDetailInformation().getShortName());
+            }
+            if (!header.getDetailInformation().getBestPhoto().isEmpty()) {
+                Glide.with(context).load(header.getDetailInformation().getBestPhoto()).into(headerHolder.imageViewTwo);
+            }
+            if (!header.getDetailInformation().getIcon().isEmpty()) {
+                Glide.with(context).load(header.getDetailInformation().getIcon()).into(headerHolder.imageViewOne);
+            }
             Glide.with(context).load(R.drawable.ic_blue_cat).into(headerHolder.imageViewThree);
-            Glide.with(context).load(header.getDetailInformation().getIcon()).into(headerHolder.imageViewOne);
+
         } else if (holder instanceof TipItemHolder) {
             TipItemHolder tipItemHolder = (TipItemHolder) holder;
             Tiper tipItem = (Tiper) recyclerViewItem;
@@ -75,17 +98,23 @@ public class DetailAdapter extends RecyclerView.Adapter {
             String year = Helper.getYear(tipItem.getItemTips());
             String hour = Helper.getHours(tipItem.getItemTips());
             String minutes = Helper.getMinutes(tipItem.getItemTips());
-            String dateCreated = day+" "+month+" "+year+"   "+hour+":"+minutes;
+            String dateCreated = day + " " + month + " " + year + "   " + hour + ":" + minutes;
+
             tipItemHolder.authorNameTextView.setText(tipItem.getItemTips().getUser().getFirstName() + " " + tipItem.getItemTips().getUser().getLastName());
             tipItemHolder.countOfLikesTextView.setText(Helper.getLikes(tipItem.getItemTips().getLikes().getCount()));
-            tipItemHolder.commentTextView.setText(tipItem.getItemTips().getText());
+            if (!tipItem.getItemTips().getText().isEmpty()) {
+                tipItemHolder.commentTextView.setText(tipItem.getItemTips().getText());
+            }
             tipItemHolder.commentCreatedTextView.setText(dateCreated);
             if (tipItem.getItemTips().getBestPhoto() != null) {
                 Glide.with(context).load(tipItem.getItemTips().getBestPhoto().getPrefix() + tipItem.getItemTips().getBestPhoto().getWidth()
                         + "x" + tipItem.getItemTips().getBestPhoto().getHeight() + tipItem.getItemTips().getBestPhoto().getSuffix()).into(tipItemHolder.photoMadeByUserImageView);
             }
-            Glide.with(context).load(tipItem.getItemTips().getUser().getUserPhoto().getPrefix() + tipItem.getItemTips().getUser().getId() +
-                    tipItem.getItemTips().getUser().getUserPhoto().getSuffix()).into(tipItemHolder.commentatorImageView);
+            if (tipItem.getItemTips().getUser().getUserPhoto().getPrefix() + tipItem.getItemTips().getUser().getId() +
+                    tipItem.getItemTips().getUser().getUserPhoto().getSuffix() != null) {
+                Glide.with(context).load(tipItem.getItemTips().getUser().getUserPhoto().getPrefix() + tipItem.getItemTips().getUser().getId() +
+                        tipItem.getItemTips().getUser().getUserPhoto().getSuffix()).into(tipItemHolder.commentatorImageView);
+            }
         }
     }
 
@@ -147,14 +176,12 @@ public class DetailAdapter extends RecyclerView.Adapter {
 
         HeaderHolder(View itemView) {
             super(itemView);
-
             map = (MapView) itemView.findViewById(R.id.map);
             map.getMapAsync(this::onMapReady);
             if (map != null) {
                 map.onCreate(null);
                 map.onResume();
                 map.getMapAsync(this::onMapReady);
-//            }
                 tipName = itemView.findViewById(R.id.tips);
                 nameOfVenueTextView = itemView.findViewById(R.id.name_of_venue);
                 raitingTextView = itemView.findViewById(R.id.raiting);
@@ -165,8 +192,6 @@ public class DetailAdapter extends RecyclerView.Adapter {
                 imageViewOne = itemView.findViewById(R.id.photo_1);
                 imageViewTwo = itemView.findViewById(R.id.photo_2);
                 imageViewThree = itemView.findViewById(R.id.photo_3);
-
-
                 authorNameTextView = itemView.findViewById(R.id.name_of_commentator);
                 countOfLikesTextView = itemView.findViewById(R.id.count_of_likes);
                 commentTextView = itemView.findViewById(R.id.comment);
@@ -182,7 +207,7 @@ public class DetailAdapter extends RecyclerView.Adapter {
             LatLng currentLocation = new LatLng(latitude, longtitude);
             googleMap.addMarker(new MarkerOptions().position(currentLocation).draggable(true));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18f));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16f));
             googleMap.getUiSettings().setScrollGesturesEnabled(false);
             googleMap.getUiSettings().setZoomGesturesEnabled(false);
             googleMap.getUiSettings().setAllGesturesEnabled(false);

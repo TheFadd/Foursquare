@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#0288D1</color>
     <color name="colorAccent">#FFD740</color>
     <color name="colorPrimaryLight">#B3E5FC</color>
+    <drawable name="colorPrimaryLight">#B3E5FC</drawable>
 
     <color name="white">#FFFFFF</color>
 

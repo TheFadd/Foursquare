@@ -5,20 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Price {
 
-    @SerializedName("message")
-    @Expose
-    private String message;
     @SerializedName("currency")
     @Expose
     private String currency;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public String getCurrency() {
         return currency;
@@ -28,4 +18,7 @@ public class Price {
         this.currency = currency;
     }
 
+    public Price(String currency) {
+        this.currency = currency;
+    }
 }

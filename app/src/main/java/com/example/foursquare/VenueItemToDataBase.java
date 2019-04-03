@@ -21,7 +21,6 @@ public class VenueItemToDataBase implements Serializable {
     private double latitude;
     private double longtitude;
 
-
     public String getCode() {
         return code;
     }
@@ -106,11 +105,11 @@ public class VenueItemToDataBase implements Serializable {
         this.longtitude = longtitude;
     }
 
-    public static VenueItemToDataBase from(Item item){
+    public static VenueItemToDataBase from(Item item) {
         return new VenueItemToDataBase(
                 item.getVenue().getId(),
                 item.getVenue().getName(),
-                item.getVenue().getCategories().get(0).getShortName(),item.getVenue().getLocation().getAddress(),
+                item.getVenue().getCategories().get(0).getShortName(), item.getVenue().getLocation().getAddress(),
                 item.getVenue().getCategories().get(0).getIcon().getPrefix(),
                 item.getVenue().getCategories().get(0).getIcon().getSuffix(),
                 item.getVenue().getLocation().getDistance(),

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:gravity="center">
 
         <ImageView
@@ -34,6 +35,5 @@
             android:text="make  query"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#A2AAB0"/>
-
 
 </LinearLayout>
