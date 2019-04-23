@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.DetailActivity">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/detail_up"
@@ -15,26 +13,23 @@
 
     <View
         android:id="@+id/view_3"
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="0.3dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider" />
 
     <include
         android:id="@+id/google_map"
         layout="@layout/activity_maps"
-        android:layout_width = "match_parent"
-        android:layout_height = "160dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="160dp" />
 
     <View
         android:id="@+id/view_4"
-        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"
-        tools:layout_editor_absoluteX="0dp" />
-
+        android:layout_height="0.3dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/divider" />
 
     <TextView
         android:id="@+id/tips"
@@ -48,7 +43,6 @@
     <View
         android:id="@+id/view_5"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="0.3dp"
+        android:background="@color/divider" />
 </LinearLayout>

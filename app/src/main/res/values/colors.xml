@@ -27,5 +27,6 @@
     <color name = "raiting8">#FFFF00</color>
     <color name = "raiting9">#7CB342</color>
     <color name = "raiting10">#1B5E20</color>
+    <color name = "divider">#4D272525</color>
 
 </resources>
